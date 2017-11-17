@@ -5,7 +5,7 @@
  * Generated linker script file for LPC1857
  * Created from library.ldt by FMCreateLinkLibraries
  * Using Freemarker v2.3.23
- * LPCXpresso v8.2.2 [Build 650] [2016-09-09]  on 09-Mar-2017 14:36:18
+ * LPCXpresso v8.2.2 [Build 650] [2016-09-09]  on 14-Mar-2017 16:48:28
  */
 
 GROUP (

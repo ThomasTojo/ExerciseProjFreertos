@@ -60,7 +60,7 @@ SemaphoreHandle_t xSemaphore = NULL;
 /*****************************************************************************
  * Private functions
  ****************************************************************************/
-
+/* LED Display Function */
 void LED_Display()
 {
 	Board_LED_Set(0, false);
@@ -98,8 +98,7 @@ void LED_Display()
 	}
 }
 
-
-/* LED1 toggle thread */
+/* Serial Read thread */
 static void vSerialReadTask1(void *pvParameters) {
 	bool LedState = false;
 	if((xSemaphore = xSemaphoreCreateBinary())==NULL)
@@ -116,19 +115,13 @@ static void vSerialReadTask1(void *pvParameters) {
 	        	Chip_UART_Read(LPC_UART, &speed, 1);
 	        	xSemaphoreGive(xSemaphore);
 	        }
-        	for(uint8_t i=0;i<2;i++)
-        	{
-        		Board_LED_Set(0, LedState);
-        		LedState = (bool) !LedState;
-
-        		/* About a 5Hz on/off toggle rate */
-        		vTaskDelay(configTICK_RATE_HZ / 10);
-        	}
+    		/* About a 5Hz on/off toggle rate */
+    		vTaskDelay(configTICK_RATE_HZ / 10);
 	    }
 	}
 }
 
-/* LED2 toggle thread */
+/* Serial Write thread */
 static void vSerialWriteTask2(void *pvParameters) {
 	bool LedState = false;
 	static char InputByte=0;
@@ -171,8 +164,8 @@ static void vSerialWriteTask2(void *pvParameters) {
 	        		InputByte=speed;
 		        	xSemaphoreGive(xSemaphore);
 		        }
-	        		Board_LED_Set(7, LedState);
-	        		LedState = (bool) !LedState;
+/*	        		Board_LED_Set(7, LedState);
+	        		LedState = (bool) !LedState;*/
 
 	        		/* About a 10Hz on/off toggle rate */
 	        		vTaskDelay(configTICK_RATE_HZ / 20);
@@ -181,6 +174,7 @@ static void vSerialWriteTask2(void *pvParameters) {
 	}
 }
 
+/* LED Display thread */
 static void vLED_OutTask3(void *pvParameters) {
 	static char InputByte=0;
 
@@ -200,7 +194,6 @@ static void vLED_OutTask3(void *pvParameters) {
 	    }
 	}
 }
-
 
 /* Sets up system hardware */
 static void prvSetupHardware(void)
